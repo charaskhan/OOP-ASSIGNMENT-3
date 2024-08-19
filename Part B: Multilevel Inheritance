@@ -1,0 +1,33 @@
+#include <iostream>
+
+class Animal {
+protected:
+    std::string name;
+
+public:
+    Animal(const std::string& n) : name(n) {}
+};
+
+class Mammal : public Animal {
+protected:
+    int numberOfLegs;
+
+public:
+    Mammal(const std::string& n, int legs) : Animal(n), numberOfLegs(legs) {}
+};
+
+class Dog : public Mammal {
+public:
+    Dog(const std::string& n, int legs) : Mammal(n, legs) {}
+
+    void bark() const { std::cout << name << " is barking!" << std::endl; }
+};
+
+int main() {
+    Dog myDog("Buddy", 4);
+    std::cout << "Name: " << myDog.name << std::endl;
+    std::cout << "Number of Legs: " << myDog.numberOfLegs << std::endl;
+    myDog.bark();
+
+    return 0;
+}
