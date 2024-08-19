@@ -1,0 +1,43 @@
+#include <iostream>
+
+class Person {
+protected:
+    std::string name;
+    std::string address;
+
+public:
+    Person(const std::string& n, const std::string& a) : name(n), address(a) {}
+};
+
+class Employee {
+protected:
+    int employeeID;
+    double salary;
+
+public:
+    Employee(int id, double sal) : employeeID(id), salary(sal) {}
+};
+
+class Teacher : public Person, public Employee {
+private:
+    std::string subject;
+
+public:
+    Teacher(const std::string& n, const std::string& a, int id, double sal, const std::string& sub)
+        : Person(n, a), Employee(id, sal), subject(sub) {}
+
+    void display() const {
+        std::cout << "Name: " << name << std::endl;
+        std::cout << "Address: " << address << std::endl;
+        std::cout << "Employee ID: " << employeeID << std::endl;
+        std::cout << "Salary: " << salary << std::endl;
+        std::cout << "Subject: " << subject << std::endl;
+    }
+};
+
+int main() {
+    Teacher t("Alice", "123 Main St", 1, 50000.0, "Mathematics");
+    t.display();
+
+    return 0;
+}
