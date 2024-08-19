@@ -1,0 +1,90 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+
+class Student {
+private:
+    std::string name;
+    int roll_number;
+    float marks;
+
+public:
+    // Constructor
+    Student() : name(""), roll_number(0), marks(0.0) {}
+
+    // Input student data
+    void input() {
+        std::cout << "Enter name: ";
+        std::cin >> name;
+        std::cout << "Enter roll number: ";
+        std::cin >> roll_number;
+        std::cout << "Enter marks: ";
+        std::cin >> marks;
+    }
+
+    // Display student data
+    void display() const {
+        std::cout << "Name: " << name << ", Roll Number: " << roll_number << ", Marks: " << marks << std::endl;
+    }
+
+    // Save student data to file
+    void saveToFile(std::ofstream& ofs) const {
+        ofs << name << "\n" << roll_number << "\n" << marks << "\n";
+    }
+
+    // Load student data from file
+    void loadFromFile(std::ifstream& ifs) {
+        ifs >> name >> roll_number >> marks;
+    }
+
+    // Update marks in file
+    void updateMarksInFile(std::fstream& fs, int roll_number_to_update, float new_marks) {
+        std::vector<Student> students;
+        Student temp;
+
+        // Read all students
+        while (!fs.eof()) {
+            temp.loadFromFile(fs);
+            students.push_back(temp);
+        }
+
+        fs.clear(); // Clear EOF flag
+        fs.seekp(0, std::ios::beg); // Move to the beginning of the file
+
+        // Write updated student data
+        for (auto& s : students) {
+            if (s.roll_number == roll_number_to_update) {
+                s.marks = new_marks;
+            }
+            s.saveToFile(fs);
+        }
+    }
+};
+
+int main() {
+    // Create and write data to file
+    std::ofstream ofs("students.txt");
+    for (int i = 0; i < 5; ++i) {
+        Student s;
+        s.input();
+        s.saveToFile(ofs);
+    }
+    ofs.close();
+
+    // Read and display data from file
+    std::ifstream ifs("students.txt");
+    Student s;
+    while (!ifs.eof()) {
+        s.loadFromFile(ifs);
+        if (ifs) s.display();
+    }
+    ifs.close();
+
+    // Modify marks
+    std::fstream fs("students.txt", std::ios::in | std::ios::out);
+    s.updateMarksInFile(fs, 2, 95.0); // Update roll number 2's marks to 95.0
+    fs.close();
+
+    return 0;
+}
